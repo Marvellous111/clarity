@@ -46,3 +46,39 @@ The API is accessed via the `openai` client, configured with a Perplexity API ke
   ```bash
   echo "PERPLEXITY_API_KEY=your_api_key" > .env
   ```
+
+
+## Usage 🖥️
+1. **Open your terminal and type in**
+  ```bash
+  uv run clarity "[query in quotes]" [--fun-mode or --serious-mode] [--deep-research or leave blank for default] [--code-review]
+  ```
+
+2. **There is no two, once you follow the prompts you are good to go**
+
+### Running the Project ▶️
+
+- Ensure dependencies are installed and .env is configured 🔧.
+
+- Navigate to the project root 📂.
+
+- Run commands as shown in the Usage section.
+
+#### Customize with flags:
+
+- --serious-mode 😐: Professional tone
+
+- --fun-mode 😄: Humorous tone
+
+- --deep-research 🔍: In-depth analysis
+
+- --code-review 💻: Code analysis mode
+
+## Future enhancements (short term)
+1. Make it a full python package that can be used by everyon (By the time you are reading this it could already be).
+
+## Future enhancements (longer term)
+1. Make it possible to keep the conversation going.
+
+## Note
+If there is anything you want, feel free to reach out to me, I'll include it or fix it.
