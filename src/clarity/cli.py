@@ -8,20 +8,9 @@ from rich.console import Console
 from rich.panel import Panel
 import httpx
 from openai import OpenAI
-from utils.SonarQuery import sonarquery
+from .SonarQuery import sonarquery
+from .SonarCodeQuery import sonarcodequery
 
-def sonar_query(word: str, tone: str, research_mode: str) -> str:
-  """Fetches"""
-  
-  
-  
-  return f"{word}: {tone}, {research_mode}"
-
-def sonar_code_query(code_review: str, research_mode: str, tone: str, error_message: str, code_message: str = "") -> str:
-  return f"""
-{code_review}: {tone}, {research_mode}\n
-{error_message}: {code_message}
-"""
 
 
 def get_multiline_input(console):
@@ -48,7 +37,6 @@ def main():
   
   tone = "serious" if args.serious_mode else "fun" if args.fun_mode else "serious"
   research_mode = "deep" if args.deep_research else "standard"
-  code_review = "code-review" if args.code_review else ""
   
   console = Console()
   
@@ -60,16 +48,27 @@ def main():
     error_message = get_multiline_input(console)
     console.print("Input the code causing the errors(press Enter twice to submit)")
     wrong_code = get_multiline_input(console)
-  
+    if not error_message.strip():
+      return "Error: An error message must be provided."
+  source_text: str = "";
+  citations: list = []
   try:
     if args.code_review:
-      source = sonar_code_query(code_review, research_mode, tone, error_message, wrong_code)
+      with console.status(f"[green]Checking for fix to errors pasted...[/green]", spinner="dots"):
+        source = sonarcodequery(research_mode, tone, error_message, wrong_code)
+        source_text = source["text"]
+        citations = source["citations"].citations
     else:
-      source = sonar_query(args.query, tone, research_mode)
-    console.print(Panel(source, title="Clarity: Financial Story", border_style="blue" if tone == "serious" else "green"))
+      with console.status(f"[green]Loading your query: {args.query}...[/green]", spinner="dots"):
+        source = sonarquery(args.query, tone, research_mode)
+        source_text = source["text"]
+        citations = source["citations"].citations
+    console.print(Panel(source_text, title="Clarity: Never leave your terminal", border_style="blue" if tone == "serious" else "green"))
     console.print("\n[bold]Sources:[/bold]")
-  except:
-    console.print("Error")
+    for sites in range(len(citations)):
+      console.print(f"{sites+1} - {citations[sites]}")
+  except Exception as e:
+    console.print(f"[red]Error:[/red] {str(e)}")
 
 
 if __name__ == "__main__":
