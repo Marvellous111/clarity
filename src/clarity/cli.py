@@ -1,4 +1,5 @@
 import argparse
+
 import json
 import os
 import sys
@@ -10,6 +11,9 @@ import httpx
 from openai import OpenAI
 from .SonarQuery import sonarquery
 from .SonarCodeQuery import sonarcodequery
+
+
+## This project may continue under rust for the backend and ui
 
 
 
